@@ -6,7 +6,7 @@ async function main() {
         deployer.address
     );
 
-    const Contract = await ethers.getContractFactory("YourContractName");
+    const Contract = await ethers.getContractFactory("Feedback.sol");
     const contract = await Contract.deploy();
 
     console.log("Contract deployed to address:", contract.address);

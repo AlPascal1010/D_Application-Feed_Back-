@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Feedback DApp</title>
-    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 </head>
 <body>
     <h1>Feedback DApp</h1>
@@ -13,106 +12,35 @@
     </div>
     <div id="feedbacks"></div>
 
-    <script>
-        let web3 = new Web3(window.ethereum);
+    <script type="module">
+
+        import { ethers } from './ethers-5.0.esm.min.js';
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contractAddress = 'your_contract_address_here';
+        const contractABI = []; // your_contract_abi_here
+        let signer;
         let feedbackContract;
-        const contractAddress = "";
-        const contractABI = [{
-            "inputs": [
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "name": "comments",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "user",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "feedback",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "_index",
-                  "type": "uint256"
-                }
-              ],
-              "name": "getFeedback",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "getFeedbackCount",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "string",
-                  "name": "_feedback",
-                  "type": "string"
-                }
-              ],
-              "name": "giveFeedback",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            }
-          ];
 
         document.getElementById('connectButton').addEventListener('click', async () => {
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            feedbackContract = new web3.eth.Contract(contractABI, contractAddress, { from: accounts[0] });
+            await window.ethereum.enable();
+            signer = provider.getSigner();
+            feedbackContract = new ethers.Contract(contractAddress, contractABI, signer);
             document.getElementById('feedbackForm').style.display = 'block';
         });
 
         document.getElementById('sendButton').addEventListener('click', async () => {
             const feedback = document.getElementById('feedbackInput').value;
-            await feedbackContract.methods.giveFeedback(feedback).send();
+            await feedbackContract.giveFeedback(feedback);
             loadFeedbacks();
         });
 
         async function loadFeedbacks() {
-            const feedbackCount = await feedbackContract.methods.getFeedbackCount().call();
+            const feedbackCount = await feedbackContract.getFeedbackCount();
             const feedbacksDiv = document.getElementById('feedbacks');
             feedbacksDiv.innerHTML = '';
             for (let i = 0; i < feedbackCount; i++) {
-                const feedback = await feedbackContract.methods.getFeedback(i).call();
+                const feedback = await feedbackContract.getFeedback(i);
                 feedbacksDiv.innerHTML += `<p><strong>${feedback[0]}</strong>: ${feedback[1]}</p>`;
             }
         }
