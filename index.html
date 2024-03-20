@@ -1,49 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback DApp</title>
 </head>
 <body>
-    <h1>Feedback DApp</h1>
-    <button id="connectButton">Connect Wallet</button>
-    <div id="feedbackForm" style="display: none;">
-        <textarea id="feedbackInput"></textarea>
-        <button id="sendButton">Send Feedback</button>
-    </div>
-    <div id="feedbacks"></div>
-
-    <script type="module">
-
-        import { ethers } from './ethers-5.0.esm.min.js';
-
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contractAddress = 'your_contract_address_here';
-        const contractABI = []; // your_contract_abi_here
-        let signer;
-        let feedbackContract;
-
-        document.getElementById('connectButton').addEventListener('click', async () => {
-            await window.ethereum.enable();
-            signer = provider.getSigner();
-            feedbackContract = new ethers.Contract(contractAddress, contractABI, signer);
-            document.getElementById('feedbackForm').style.display = 'block';
-        });
-
-        document.getElementById('sendButton').addEventListener('click', async () => {
-            const feedback = document.getElementById('feedbackInput').value;
-            await feedbackContract.giveFeedback(feedback);
-            loadFeedbacks();
-        });
-
-        async function loadFeedbacks() {
-            const feedbackCount = await feedbackContract.getFeedbackCount();
-            const feedbacksDiv = document.getElementById('feedbacks');
-            feedbacksDiv.innerHTML = '';
-            for (let i = 0; i < feedbackCount; i++) {
-                const feedback = await feedbackContract.getFeedback(i);
-                feedbacksDiv.innerHTML += `<p><strong>${feedback[0]}</strong>: ${feedback[1]}</p>`;
+    <body>
+        <h1>Feedback DApp</h1>
+        <button id="connectButton">Connect Wallet</button>
+        <div id="feedbackForm" style="display: none;">
+            <textarea id="feedbackInput"></textarea>
+            <button id="sendButton">Send Feedback</button>
+        </div>
+        <div id="feedbacks"></div>
+    
+        <script type="module">
+    
+            import { ethers } from 'C:\Users\PASCAL\Desktop\Learnable\D_Application-Feed_Back-\node_modules\ethers\dist\ethers.min.js';
+    
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contractAddress = 'your_contract_address_here';
+            const contractABI = []; // your_contract_abi_here
+            let signer;
+            let feedbackContract;
+    
+            document.getElementById('connectButton').addEventListener('click', async () => {
+                await window.ethereum.enable();
+                signer = provider.getSigner();
+                feedbackContract = new ethers.Contract(contractAddress, contractABI, signer);
+                document.getElementById('feedbackForm').style.display = 'block';
+            });
+    
+            document.getElementById('sendButton').addEventListener('click', async () => {
+                const feedback = document.getElementById('feedbackInput').value;
+                await feedbackContract.giveFeedback(feedback);
+                loadFeedbacks();
+            });
+    
+            async function loadFeedbacks() {
+                const feedbackCount = await feedbackContract.getFeedbackCount();
+                const feedbacksDiv = document.getElementById('feedbacks');
+                feedbacksDiv.innerHTML = '';
+                for (let i = 0; i < feedbackCount; i++) {
+                    const feedback = await feedbackContract.getFeedback(i);
+                    feedbacksDiv.innerHTML += `<p><strong>${feedback[0]}</strong>: ${feedback[1]}</p>`;
+                }
             }
-        }
-    </script>
+        </script>
+    </body>
 </body>
 </html>
