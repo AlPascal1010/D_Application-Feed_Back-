@@ -8,7 +8,7 @@ module.exports = {
     },
     sepolia: {
       url: "https://eth-sepolia.g.alchemy.com/v2/P-xoyxFr0t-dYwLNV9NXl4SqgGbiCfN0",
-      accounts: [`0x79ae5c61af0f5b7de3365d9e520489dee2acca10e455a2f75d210eeebe36a189`]
+      accounts: [`0x79ae5c61af0f5b7de3465d9e550489dee2acca10e455a2f75d210eeebe36a179`]
     }
   },
   solidity: {
